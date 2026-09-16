@@ -1,6 +1,5 @@
 from formulas import LCG
 
-
 class Fila:
     def __init__(self, servidores, capacidade):
         self.servidores = servidores
@@ -32,7 +31,7 @@ class TandemSim:
     def __init__(self, gerador,
                  servidores1, capacidade1, atend1_min, atend1_max,
                  servidores2, capacidade2, atend2_min, atend2_max,
-                 cheg_min, cheg_max, max_rnd=100000):
+                 cheg_min, cheg_max, primeira_chegada=None, max_rnd=100000):
         self.gerador = gerador
         self.fila1 = Fila(servidores1, capacidade1)
         self.fila2 = Fila(servidores2, capacidade2)
@@ -40,6 +39,8 @@ class TandemSim:
         self.cheg_min, self.cheg_max = cheg_min, cheg_max
         self.atend1_min, self.atend1_max = atend1_min, atend1_max
         self.atend2_min, self.atend2_max = atend2_min, atend2_max
+
+        self.primeira_chegada = primeira_chegada if primeira_chegada is not None else cheg_min
 
         self.max_rnd = max_rnd
         self.rnd_consumidos = 0
@@ -60,7 +61,7 @@ class TandemSim:
         self.fila2.tempos_acumulados[self.fila2.estado] += delta_t
 
     def executar(self):
-        self.agendar_evento(3.0, 'CHEGADA')
+        self.agendar_evento(self.primeira_chegada, 'CHEGADA')
 
         while self.rnd_consumidos < self.max_rnd:
             if not self.eventos:
@@ -133,8 +134,10 @@ if __name__ == "__main__":
     gerador = LCG(semente=42)
     sim = TandemSim(
         gerador,
-        servidores1=2, capacidade1=4, atend1_min=5, atend1_max=6,   # Fila1: G/G/2/4
-        servidores2=3, capacidade2=5, atend2_min=2, atend2_max=4,   # Fila2: G/G/3/5
-        cheg_min=1, cheg_max=3
+        servidores1=2, capacidade1=3, atend1_min=4, atend1_max=5,   
+        servidores2=1, capacidade2=5, atend2_min=1, atend2_max=3,   
+        cheg_min=1, cheg_max=5,
+        primeira_chegada=2.5,
+        max_rnd=100000
     )
     sim.executar()
