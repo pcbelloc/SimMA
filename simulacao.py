@@ -5,10 +5,10 @@ from formulas import LCG
 
 
 class m4:
+    #inicializações:
     def __init__(self, gerador, modelo, max_rnd=100000, numeros=None):
         self.gerador = gerador
         self.filas = modelo['queues']
-        # Os mesmos parâmetros de antes, agora separados pelo nome da fila.
         self.servidores = {nome: fila['servers'] for nome, fila in self.filas.items()}
         self.capacidade = {nome: fila.get('capacity', -1) for nome, fila in self.filas.items()}
         self.cheg_min = {nome: fila.get('minArrival') for nome, fila in self.filas.items()}
@@ -46,7 +46,6 @@ class m4:
         self.eventos.sort(key=lambda x: x[0])
 
     def iniciar_atendimento(self, fila):
-        # O destino fica guardado na saída, como no simulador do módulo 3.
         destino = None
         destinos = self.rede[fila]
         if len(destinos) == 1 and destinos[0][1] == 1:
@@ -65,7 +64,6 @@ class m4:
         return self.rnd_consumidos < self.max_rnd
 
     def receber_cliente(self, fila):
-        # Usado tanto na chegada externa quanto na transferência entre filas.
         if self.capacidade[fila] == -1 or self.estado[fila] < self.capacidade[fila]:
             self.estado[fila] += 1
             self.tempos_acumulados[fila].setdefault(self.estado[fila], 0.0)
@@ -90,7 +88,6 @@ class m4:
             self.tempo_global = tempo_evento
 
             if tipo_evento == 'CHEGADA':
-                # Serviço antes da próxima chegada: ordem validada com o módulo 3.
                 if not self.receber_cliente(fila):
                     break
                 tempo_nova_chegada = self.tempo_global + self.gerar_tempo(self.cheg_min[fila], self.cheg_max[fila])
@@ -121,7 +118,6 @@ class m4:
 
 
 def carregar_modelo(arquivo):
-    # Aceita a marca !PARAMETERS do YAML fornecido pelo professor.
     yaml.SafeLoader.add_constructor('!PARAMETERS', yaml.SafeLoader.construct_mapping)
     with open(arquivo, encoding='utf-8-sig') as entrada:
         modelo = yaml.safe_load(entrada)
