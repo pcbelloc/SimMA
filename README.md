@@ -7,5 +7,8 @@
 16/09: Entrega do M6 | Desenvolvimento de Simulador para Filas em Tandem.
      - Estendida a estrutura do simulador de fila única (M4) para duas filas em tandem (Fila1 -> Fila2), reaproveitando a classe Fila e o gerador de pseudorandom criado no M2.
 
-07/10: Entrega do T1 | Avaliaçõ de Aprendizagem
+07/10: Entrega do T1 | Avaliação de Aprendizagem
     - Simulação de filas interligadas, usado código fonte do M3 para o .yml
+
+13/10: Entrega do T2 | Avaliação de Aprendizagem
+    - Adicionado classe analise.py, não foi mexico no simulação nem no formulas, uma vez que era somente para ler e fazer o yml. Adicionado inicial e melhorado.yml
